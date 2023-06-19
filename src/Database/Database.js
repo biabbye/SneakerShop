@@ -1,7 +1,5 @@
 export const Products = [
 
-    //DE CAUTAT POZE PE BUNE LA ADIDASI IN FORMAT PNG
-
     {
       id: 1,
       productName: 'Adidas Multicolored',
@@ -12,11 +10,7 @@ export const Products = [
       salePercentage: 10,
       productImage: require('../Database/products/AdidasMulticolored.png'),
       onStock: true,
-    //   productImageList: [
-    //     require('../database/images/products/Mi1.png'),
-    //     require('../database/images/products/Mi2.png'),
-    //     require('../database/images/products/Mi3.png'),
-    //   ],
+
     },
     {
       id: 2,
@@ -27,11 +21,7 @@ export const Products = [
       onSale: false,
       productImage: require('../Database/products/AirForce1.png'),
       onStock: true,
-    //   productImageList: [
-    //     require('../database/images/products/boat1.png'),
-    //     require('../database/images/products/boat2.png'),
-    //     require('../database/images/products/boat3.png'),
-    //   ],
+  
     },
     {
       id: 3,
@@ -43,11 +33,7 @@ export const Products = [
       salePercentage: 18,
       productImage: require('../Database/products/NikeAirJordan.png'),
       onStock: true,
-    //   productImageList: [
-    //     require('../database/images/accessories/boatairpods1.png'),
-    //     require('../database/images/accessories/boatairpods2.png'),
-    //     require('../database/images/accessories/boatairpods3.png'),
-    //   ],
+ 
     },
     {
       id: 4,
@@ -58,11 +44,7 @@ export const Products = [
       onSale: false,
       productImage: require('../Database/products/NikeAirMaxRunning.png'),
       onStock: true,
-    //   productImageList: [
-    //     require('../database/images/accessories/boatbassheads1.png'),
-    //     require('../database/images/accessories/boatbassheads2.png'),
-    //     require('../database/images/accessories/boatbassheads3.png'),
-    //   ],
+   
     },
     {
       id: 5,
@@ -73,11 +55,7 @@ export const Products = [
       onSale: false,
       productImage: require('../Database/products/NikeHuarache.png'),
       onStock: false,
-    //   productImageList: [
-    //     require('../database/images/accessories/boatrockerz1.png'),
-    //     require('../database/images/accessories/boatrockerz2.png'),
-    //     require('../database/images/accessories/boatrockerz3.png'),
-    //   ],
+   
     },
     {
       id: 6,
@@ -88,11 +66,7 @@ export const Products = [
       onSale: false,
       productImage: require('../Database/products/NikeRunningBlackShoe.png'),
       onStock: true,
-    //   productImageList: [
-    //     require('../database/images/accessories/boultairbass1.png'),
-    //     require('../database/images/accessories/boultairbass2.png'),
-    //     require('../database/images/accessories/boultairbass3.png'),
-    //   ],
+    
     },
     {
         id: 7,
@@ -103,11 +77,7 @@ export const Products = [
         onSale: false,
         productImage: require('../Database/products/Superstars.png'),
         onStock: true,
-        // productImageList: [
-        //   require('../database/images/accessories/boultairbass1.png'),
-        //   require('../database/images/accessories/boultairbass2.png'),
-        //   require('../database/images/accessories/boultairbass3.png'),
-        // ],
+     
       },
       {
         id: 8,
@@ -118,10 +88,6 @@ export const Products = [
         onSale: false,
         productImage: require('../Database/products/YellowJordan.png'),
         onStock: true,
-        // productImageList: [
-        //   require('../database/images/accessories/boultairbass1.png'),
-        //   require('../database/images/accessories/boultairbass2.png'),
-        //   require('../database/images/accessories/boultairbass3.png'),
-        // ],
+      
       },
   ];
