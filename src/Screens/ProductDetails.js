@@ -8,7 +8,6 @@ import {
   FlatList,
   Image,
   Dimensions,
-  Animated,
 } from 'react-native';
 import { useToast } from "react-native-toast-notifications";
 import { COLOURS } from '../constants';
@@ -37,30 +36,45 @@ const ProductDetails = ({route,navigation}) => {
     }
   }, [productId]);
 
-  const addToMyCart = async (product) => {
-    try{
-      const existingProducts = await AsyncStorage.getItem('cartItems');
-      let cartItems = [];
-  
-      if (existingProducts) {
+  useEffect(()=> {
+    fetchLoggedInUser()
+  },[])
 
-        cartItems = JSON.parse(existingProducts);
-        const productExists = cartItems.some((item) => item.id === product.id);
-
-        if (productExists) {
-          toast.show("Product already added to cart.", {
-            type: 'warning'
-          });
-          return;
+  const fetchLoggedInUser = async () => {
+    try {
+      const storedUsers = await AsyncStorage.getItem('users');
+      if (storedUsers) {
+        const users = JSON.parse(storedUsers);
+        const loggedInUser = users.find((user) => user.isLoggedIn === true);
+        if (loggedInUser) {
+          
+          console.log("AICI LOGGED IN USER CART", loggedInUser.cart);
+          // setLoggedInUserData(loggedInUser);
+           
         }
       }
-      cartItems.push(product);
-      await AsyncStorage.setItem('cartItems', JSON.stringify(cartItems));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addToMyCart = async (product) => {
+    try{ 
+      
+      const storedUsers = await AsyncStorage.getItem('users');
+      if (storedUsers) {
+        const users = JSON.parse(storedUsers);
+        const loggedInUser = users.find((user) => user.isLoggedIn === true);
+        if (loggedInUser) {
+          loggedInUser.cart.push(product);
+          await AsyncStorage.setItem('users', JSON.stringify(users));
+          console.log('Product added to cart successfully');
+        }
+      }
       toast.show("Product successfully added to cart.", {
         type: 'success'
       });
       navigation.navigate('Home');
-      
     }catch(error){
       console.error('Error adding product to cart:', error);
     }
@@ -312,36 +326,3 @@ const ProductDetails = ({route,navigation}) => {
 
 export default ProductDetails
 
-
-
-{/* <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: 16,
-              marginTop: 32,
-            }}>
-            {product.productImageList
-              ? product.productImageList.map((data, index) => {
-                  let opacity = position.interpolate({
-                    inputRange: [index - 1, index, index + 1],
-                    outputRange: [0.2, 1, 0.2],
-                    extrapolate: 'clamp',
-                  });
-                  return (
-                    <Animated.View
-                      key={index}
-                      style={{
-                        width: '16%',
-                        height: 2.4,
-                        backgroundColor: COLOURS.black,
-                        opacity,
-                        marginHorizontal: 4,
-                        borderRadius: 100,
-                      }}></Animated.View>
-                  );
-                })
-              : null} 
-          </View> */}

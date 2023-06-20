@@ -2,25 +2,60 @@ import { View, Text,ScrollView,TouchableOpacity,Image,StatusBar,StyleSheet,TextI
 import React,{useState,useEffect} from 'react'
 import { COLOURS } from '../constants'
 import { Products } from '../Database/Database'
-import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ProductCard from '../components/ProductCard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = ({navigation}) => {
 
     const [productsData, setProductsData] =  useState(null);
+    const [loggedInUserData,setLoggedInUserData] = useState();
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-                getDataFromDatabase();
+          fetchProducts();
         });
         
         console.log(productsData);
+
         return unsubscribe;
     },[navigation]);
 
-    const getDataFromDatabase = () => {
+    useEffect(() => {
+      fetchLoggedInUser(); 
+    },[]);
+
+    // const deleteAllUsers = async () => {
+    //   try {
+    //     await AsyncStorage.removeItem('users');
+    //     console.log('All user data deleted successfully');
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
+
+    const fetchLoggedInUser = async () => {
+      try {
+        const storedUsers = await AsyncStorage.getItem('users');
+        if (storedUsers) {
+          console.log("------------------------------------")
+          console.log("STORED USERS:", storedUsers);
+          console.log("------------------------------------")
+          const users = JSON.parse(storedUsers);
+          const loggedInUser = users.find((user) => user.isLoggedIn === true);
+          if (loggedInUser) {
+            
+            console.log("AICI LOGGED IN USER", loggedInUser);
+            setLoggedInUserData(loggedInUser);
+             
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchProducts = () => {
         let productList = [];
         for (let index = 0; index < Products.length; index++) {
               productList.push(Products[index]);
@@ -28,6 +63,24 @@ const Home = ({navigation}) => {
       
           setProductsData(productList);
     }
+
+    const handleLogout = async () => {
+      try {
+        const storedUsers = await AsyncStorage.getItem('users');
+        if (storedUsers) {
+          const users = JSON.parse(storedUsers);
+          
+          const user = users.find((user) => user.isLoggedIn === true);
+          if (user) {
+              user.isLoggedIn = false;
+              await AsyncStorage.setItem('users', JSON.stringify(users));
+              navigation.replace('Login');
+          } 
+        } 
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
   return (
     <View style={styles.container}>
@@ -37,9 +90,9 @@ const Home = ({navigation}) => {
             <View style={styles.usernameContainer}>
                 <View style={{flexDirection:'row', paddingTop:10}}>
                     <View style={styles.usernameIconContainer}>
-                        <Text style={styles.usernameIconText}>B</Text>
+                        <Text style={styles.usernameIconText}>{loggedInUserData && loggedInUserData.firstName.charAt(0)}</Text>
                     </View>
-                    <Text style={styles.greetingText}>Hello Bianca</Text>
+                    <Text style={styles.greetingText}>Hello {loggedInUserData && loggedInUserData.firstName}</Text>
                 </View>
                 
                 <Text style={styles.greetingDescription}>Find the perfect sneakers for you</Text>
@@ -51,6 +104,15 @@ const Home = ({navigation}) => {
               style={styles.headerRightIcon}
             />
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => {handleLogout()}}>
+              <MaterialCommunityIcons
+                name="logout"
+                style={styles.logout}
+              />
+          </TouchableOpacity>
+         
+
+
         </View>
         <View style={styles.searchContainer}>
             <View style={styles.searchWrapper}>
@@ -167,15 +229,20 @@ const styles = StyleSheet.create({
     },
     headerRightIcon:{
         fontSize: 18,
-        color: COLOURS.backgroundMedium,
+        color: COLOURS.backgroundDark,
         padding: 12,
         borderRadius: 10,
         borderWidth: 1,
         borderColor: COLOURS.backgroundLight,
     },
-    usernameContainer: {
-    
-    },
+    logout:{
+      fontSize: 18,
+      color: COLOURS.backgroundDark,
+      padding: 12,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: COLOURS.backgroundLight,
+  },
     greetingText: {
         fontSize: 24,
         color: COLOURS.black,
@@ -248,59 +315,4 @@ const styles = StyleSheet.create({
 
 
 
-  {/* <View
-          style={{
-            padding: 16,
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: 18,
-                  color: COLOURS.black,
-                  fontWeight: '500',
-                  letterSpacing: 1,
-                }}>
-                Accessories
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: COLOURS.black,
-                  fontWeight: '400',
-                  opacity: 0.5,
-                  marginLeft: 10,
-                }}>
-                78
-              </Text>
-            </View>
-            <Text
-              style={{
-                fontSize: 14,
-                color: COLOURS.blue,
-                fontWeight: '400',
-              }}>
-              SeeAll
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'space-around',
-            }}>
-            {accessory.map(data => {
-              return <ProductCard data={data} key={data.id} />;
-            })}
-          </View>
-        </View> */}
-
+  

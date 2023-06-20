@@ -8,14 +8,15 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLOURS } from '../constants';
-import { Products } from '../Database/Database';
 import { useToast } from "react-native-toast-notifications";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Cart = ({navigation}) => {
+  
   const toast = useToast();
   const [products, setProducts] = useState([]);
   const [totalCost, setTotalCost] = useState(0);
+  const [loggedInUserData,setLoggedInUserData] = useState();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -25,29 +26,49 @@ const Cart = ({navigation}) => {
     return unsubscribe;
   }, [navigation]);
 
-  const fetchProductsFromStorage = async () => {
-    let existingProducts = await AsyncStorage.getItem('cartItems');
-    existingProducts = JSON.parse(existingProducts);
-    let productsArray = []
+  useEffect(() => {
+    fetchLoggedInUser(); 
+    fetchProductsFromStorage();
+  },[]);
 
-    if (existingProducts) {
-      console.log(existingProducts);
-      Products.forEach(product => {
-        existingProducts.forEach((existingProduct) => {
-          if(existingProduct.id == product.id){
-            productsArray.push(product)
-          }
-        })
-      })
-
-      setProducts(productsArray);
-      getTotalCost(productsArray);
-
-    } else {
-      setProducts(null);
-      getTotalCost(null);
+  const fetchLoggedInUser = async () => {
+    try {
+      const storedUsers = await AsyncStorage.getItem('users');
+      if (storedUsers) {
+        const users = JSON.parse(storedUsers);
+        const loggedInUser = users.find((user) => user.isLoggedIn === true);
+        if (loggedInUser) {
+          
+          console.log("Here logged in user cart: ", loggedInUser.cart);
+          setLoggedInUserData(loggedInUser);
+          
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
+
+
+  const fetchProductsFromStorage = async() => {
+
+    let productsFromCartArray = [];
+    const storedUsers = await AsyncStorage.getItem('users');
+        if (storedUsers) {
+          const users = JSON.parse(storedUsers);
+          const loggedInUser = users.find((user) => user.isLoggedIn === true);
+            if (loggedInUser) {
+              for(let i = 0 ;i<loggedInUser.cart.length;i++)
+              {
+                console.log("------------CART ITEM-------------")
+                console.log(loggedInUser.cart[i]);
+                productsFromCartArray.push(loggedInUser.cart[i]);
+              }
+            setProducts(productsFromCartArray);
+            getTotalCost(productsFromCartArray);
+          }
+        } 
+  }
 
   const getTotalCost = (productsData) => {
     let totalCost = 0;
@@ -60,20 +81,24 @@ const Cart = ({navigation}) => {
 
   const deleteCartItem = async (id) => {
     try {
-      const existingCartItems = await AsyncStorage.getItem('cartItems');
-  
-      if (existingCartItems) {
-        let cartItems = JSON.parse(existingCartItems);
-  
-        cartItems = cartItems.filter((item) => item.id !== id);
-  
-        await AsyncStorage.setItem('cartItems', JSON.stringify(cartItems))
+      console.log('DELETING ITEM CALLED')
+
+      const storedUsers = await AsyncStorage.getItem('users');
+        if (storedUsers) {
+          const users = JSON.parse(storedUsers);
+          const loggedInUser = users.find((user) => user.isLoggedIn === true);
+            if (loggedInUser) {
+              loggedInUser.cart.pop(id);
+            await AsyncStorage.setItem('users', JSON.stringify(users));
+            console.log('Product removed from the cart successfully');
+          }
+        } 
+
         fetchProductsFromStorage();
   
         toast.show("Item removed from cart successfully.", {
           type: 'success'
         });
-      }
     } catch (error) {
       console.error('Error deleting item from cart:', error);
     }
@@ -107,7 +132,7 @@ const Cart = ({navigation}) => {
   const renderProducts = (item, index) => {
     return (
       <TouchableOpacity
-        key={item.key}
+        key={item.id}
         onPress={() => navigation.navigate('ProductDetails', {productId: item.id})}
         style={{
           width: '100%',
@@ -117,7 +142,7 @@ const Cart = ({navigation}) => {
           alignItems: 'center',
         }}>
         <View
-        key={index}
+        
           style={{
             width: '30%',
             height: 100,
@@ -170,24 +195,31 @@ const Cart = ({navigation}) => {
                     fontWeight: '400',
                     maxWidth: '85%',
                     marginRight: 4,
-                    color:'red'
+                
                   }}>
-                    RON {(item.productPrice - (item.productPrice * item.salePercentage) / 100).toFixed(2)}
+                    RON {item.productPrice}
                   </Text>
                   <Text style={{
                     fontSize: 14,
                     fontWeight: '400',
                     maxWidth: '85%',
                     marginRight: 4,
-                  }}>(RON {item.productPrice})</Text>
+                    color:'red'
+                  }}>(RON {(item.productPrice + (item.productPrice * item.salePercentage) / 100).toFixed(2)})</Text>
                 </View>
                 
               ) : (
                 <Text>RON {item.productPrice}</Text>
               )}
-            
+              
             </View>
+            
           </View>
+          <Text style={{fontSize: 14,
+                    fontWeight: '500',
+                    maxWidth: '85%',
+                    color:COLOURS.backgroundDark
+                    }}>Sizes Available</Text>
           <View
             style={{
               flexDirection: 'row',
@@ -202,40 +234,50 @@ const Cart = ({navigation}) => {
               <View
                 style={{
                   borderRadius: 100,
-                  marginRight: 20,
+                  marginRight: 5,
                   padding: 4,
                   borderWidth: 1,
                   borderColor: COLOURS.backgroundMedium,
                   opacity: 0.5,
                 }}>
-                <MaterialCommunityIcons
-                  name="minus"
-                  style={{
-                    fontSize: 16,
-                    color: COLOURS.backgroundDark,
-                  }}
-                />
+                <Text>37.5</Text>
               </View>
-              <Text>1</Text>
               <View
                 style={{
                   borderRadius: 100,
-                  marginLeft: 20,
+                  marginRight: 5,
                   padding: 4,
                   borderWidth: 1,
                   borderColor: COLOURS.backgroundMedium,
                   opacity: 0.5,
                 }}>
-                <MaterialCommunityIcons
-                  name="plus"
-                  style={{
-                    fontSize: 16,
-                    color: COLOURS.backgroundDark,
-                  }}
-                />
+                <Text>39</Text>
+              </View>
+              <View
+                style={{
+                  borderRadius: 100,
+                  marginRight: 5,
+                  padding: 4,
+                  borderWidth: 1,
+                  borderColor: COLOURS.backgroundMedium,
+                  opacity: 0.5,
+                }}>
+                <Text>40.5</Text>
+              </View>
+              <View
+                style={{
+                  borderRadius: 100,
+                  marginRight: 5,
+                  padding: 4,
+                  borderWidth: 1,
+                  borderColor: COLOURS.backgroundMedium,
+                  opacity: 0.5,
+                }}>
+                <Text>42</Text>
               </View>
             </View>
             <TouchableOpacity onPress={() => {deleteCartItem(item.id)}}>
+             
               <MaterialCommunityIcons
                 name="delete-outline"
                 style={{
@@ -381,17 +423,17 @@ const Cart = ({navigation}) => {
                       color: COLOURS.black,
                       fontWeight: '500',
                     }}>
-                    TO BE DONE AFTER LOGIN PAGE
+                    Delivery address 
                   </Text>
                   <Text
                     style={{
-                      fontSize: 12,
+                      fontSize: 14,
                       color: COLOURS.black,
                       fontWeight: '400',
                       lineHeight: 20,
-                      opacity: 0.5,
+                      opacity: 0.5, 
                     }}>
-                    User will add its address for delivery
+                    {loggedInUserData && loggedInUserData.deliveryAddress}
                   </Text>
                 </View>
               </View>
