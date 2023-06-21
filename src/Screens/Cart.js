@@ -117,7 +117,17 @@ const Cart = ({navigation}) => {
 
   const checkOut = async () => {
     try {
-      await AsyncStorage.removeItem('cartItems');
+
+      const storedUsers = await AsyncStorage.getItem('users');
+        if (storedUsers) {
+          const users = JSON.parse(storedUsers);
+          const loggedInUser = users.find((user) => user.isLoggedIn === true);
+            if (loggedInUser) {
+              loggedInUser.cart = [];
+            await AsyncStorage.setItem('users', JSON.stringify(users));
+            console.log('Product removed from the cart successfully');
+          }
+        } 
     } catch (error) {
       console.error('Error checking out:', error);
     }

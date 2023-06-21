@@ -5,7 +5,7 @@ export const Products = [
       productName: 'Adidas Multicolored',
       productPrice: 699,
       description:
-        'Up to 20 hours battery life | Super powerful Bass | 40mm dynamic driver | Pressure less ear muffs | Bluetooth 5.0 | Voice control',
+        'The Adidas Multicolored sneaker is a vibrant and eye-catching footwear option that combines style and functionality',
       onSale: true,
       salePercentage: 10,
       productImage: require('../Database/products/AdidasMulticolored.png'),
@@ -17,7 +17,7 @@ export const Products = [
       productName: 'Nike Blue Air Force 1 ',
       productPrice: 589,
       description:
-        'boAt Rockerz 450 M is an on-ear wireless headset that has been ergonomically designed to meet the needs of music lovers.',
+        'The Nike Blue Air Force 1 sneaker is a classic and timeless footwear option that combines iconic style with modern comfort.',
       onSale: false,
       productImage: require('../Database/products/AirForce1.png'),
       onStock: true,
@@ -28,7 +28,7 @@ export const Products = [
       productName: 'Nike Air Jordan 6 Rings',
       productPrice: 699,
       description:
-        'Bluetooth: It has Bluetooth v5.0 with a range of 10m and is compatible with Android & iOS',
+        'The Nike Air Jordan 6 Rings sneaker is a unique and distinctive footwear option that pays homage to Michael Jordans incredible basketball career.',
       onSale: true,
       salePercentage: 18,
       productImage: require('../Database/products/NikeAirJordan.png'),
@@ -40,7 +40,7 @@ export const Products = [
       productName: 'Nike Air Max Running Blue',
       productPrice: 399,
       description:
-        'Fly into your workouts with precise tones that inspire and energize your system with its HD sound, all the time.',
+        'The Nike Air Max Running Blue sneaker is a stylish and performance-oriented footwear option designed for runners and fitness enthusiasts.',
       onSale: false,
       productImage: require('../Database/products/NikeAirMaxRunning.png'),
       onStock: true,
@@ -51,7 +51,7 @@ export const Products = [
       productName: 'Nike Air Huarache Grey',
       productPrice: 479,
       description:
-        'The unbeatable boAt signature sound shines through no matter what are you playing courtesy its 10mm drivers.',
+        'The Nike Air Huarache Grey sneaker is a stylish and versatile footwear option known for its distinct design and comfort.',
       onSale: false,
       productImage: require('../Database/products/NikeHuarache.png'),
       onStock: false,
@@ -62,7 +62,7 @@ export const Products = [
       productName: 'Nike Running Black New Edition',
       productPrice: 399,
       description:
-        'One Touch Control & Voice Assistant: With one multifunction button, you can play/pause, previous/next track and answer/hang-up calls.Voice assistant function lets you access siri/Google Assistant',
+        'The Nike Running Black New Edition sneaker is a stylish and versatile footwear option known for its distinct design and comfort.',
       onSale: false,
       productImage: require('../Database/products/NikeRunningBlackShoe.png'),
       onStock: true,
@@ -73,7 +73,7 @@ export const Products = [
         productName: 'Adidas Superstars Classic',
         productPrice: 389,
         description:
-          'One Touch Control & Voice Assistant: With one multifunction button, you can play/pause, previous/next track and answer/hang-up calls.Voice assistant function lets you access siri/Google Assistant',
+          'The Adidas Superstars Classic sneaker is an iconic and timeless footwear option that has gained legendary status in the world of sneakers',
         onSale: false,
         productImage: require('../Database/products/Superstars.png'),
         onStock: true,
@@ -84,7 +84,7 @@ export const Products = [
         productName: 'Nike Jordan 1 Mid Yellow Toe Black',
         productPrice: 1099,
         description:
-          'Cei mai smecheri adidasi hazosi daia de poarta skateri stil Tony Hawk manca-v-as gura ',
+          'The Nike Jordan 1 Mid Yellow Toe Black sneaker is a bold and stylish footwear option that draws inspiration from the iconic Air Jordan 1 silhouette ',
         onSale: false,
         productImage: require('../Database/products/YellowJordan.png'),
         onStock: true,

@@ -29,9 +29,9 @@ const Register = ({navigation}) => {
     const handleRegister = async () => {
         try {
 
-            console.log('REGISTER CALLED')
-            console.log(password)
-            console.log(confirmPassword)
+            // console.log('REGISTER CALLED')
+            // console.log(password)
+            // console.log(confirmPassword)
             if(!firstName || !lastName || !email || !deliveryAddress || !password || !confirmPassword)
             {
                 toast.show("Empty fields.", {
